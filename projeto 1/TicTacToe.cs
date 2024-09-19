@@ -3,18 +3,81 @@ namespace projeto_1
     public partial class TitTacToe : Form
     {
         bool x_turn = true;
+        Informações info = new Informações();
         public TitTacToe()
         {
             InitializeComponent();
-            Informações info = new Informações();
             info.ShowDialog();
             greetings.Text = "Olá, " + info.nome_jogador;
 
         }
-
-        private bool[] win_condition()
+        private void Dificuldade_facil(object sender)
         {
-            bool draw = true, win = false;
+            ((Button)sender).Text = "X";
+            ((Button)sender).Enabled = false;
+
+
+            int game_result = Game_Result();
+
+            if (game_result == 0)
+            {
+                Random random = new Random();
+                int pos0 = random.Next(9);
+                Jogada_Bot(pos0);
+            }
+            else
+            {
+
+            }
+            game_result = Game_Result();
+            if (game_result == 1)
+            {
+
+            }
+        }
+        private void Jogada_Bot(int pos0)
+        {
+            int pos = 0;
+            foreach (Control c in this.Controls)
+            {
+                if (c is Button)
+                {
+                    if (pos == pos0)
+                    {
+                        if (((Button)c).Enabled == false)
+                        {
+                            Random r = new Random();
+                            Jogada_Bot(r.Next(9));
+                        }
+                        else
+                        {
+                            ((Button)c).Text = "O";
+                        }
+                        break;
+                    }
+                    pos++;
+                }
+            }
+        }
+        private void Dificuldade_JxJ(object sender)
+        {
+            if (x_turn)
+            {
+                ((Button)sender).Text = "X";
+            }
+            else
+            {
+                ((Button)sender).Text = "O";
+            }
+
+            ((Button)sender).Enabled = false;
+            x_turn = !(x_turn);
+            Game_Result();
+        }
+        private int Game_Result()
+        {
+            bool draw = true;
+            int win;
             foreach (Control c in this.Controls)
             {
                 if (c is Button)
@@ -25,38 +88,62 @@ namespace projeto_1
                     }
                 }
             }
-
-            if (draw)
+            win = win_check();
+            if ((win == 0) && draw)
             {
                 MessageBox.Show("Empate");
+                win = -1;
             }
-            else
+            return win;
+        }
+        private int win_check()
+        {
+            int win = 0;
+            if ((button11.Text == button12.Text && button12.Text == button13.Text) && button11.Text != "" ||                             // linha um
+                (button11.Text == button21.Text && button11.Text == button31.Text) && button11.Text != "")        // coluna 1
             {
-                if (button11.Text == button12.Text && button12.Text == button13.Text && button11.Text != "" || // linha um
-                    button11.Text == button21.Text && button11.Text == button31.Text && button11.Text != "") // coluna 1
+                MessageBox.Show(button11.Text + " Ganhou!");
+                buttons_enable(false);
+                if (button11.Text == "X")
                 {
-                    MessageBox.Show(button11.Text + " Ganhou!");
-                    buttons_enable(false);
-                    win = true;
+                    win = 1;
                 }
-                else if (button21.Text == button22.Text && button22.Text == button23.Text && button22.Text != "" || // linha dois
-                        button12.Text == button22.Text && button22.Text == button32.Text && button22.Text != "" || // coluna 2
-                        button11.Text == button22.Text && button22.Text == button33.Text && button22.Text != "" ||  // \
-                        button31.Text == button22.Text && button22.Text == button13.Text && button22.Text != "")    // /
+                else
                 {
-                    MessageBox.Show(button22.Text + " Ganhou!");
-                    buttons_enable(false);
-                    win = true;
-                }
-                else if (button31.Text == button32.Text && button32.Text == button33.Text && button31.Text != "" || // linha tres
-                        button13.Text == button23.Text && button23.Text == button33.Text && button13.Text != "")    // coluna 3
-                {
-                    MessageBox.Show(button33.Text + " Ganhou!");
-                    buttons_enable(false);
-                    win = true;
+                    win = 2;
                 }
             }
-            return [win, draw];
+            else if ((button21.Text == button22.Text && button22.Text == button23.Text) && button22.Text != "" ||                        // linha dois
+                    (button12.Text == button22.Text && button22.Text == button32.Text) && button22.Text != "" ||                        // coluna 2
+                    (button11.Text == button22.Text && button22.Text == button33.Text) && button22.Text != "" ||                        // \
+                    (button31.Text == button22.Text && button22.Text == button13.Text) && button22.Text != "")    // /
+            {
+                MessageBox.Show(button22.Text + " Ganhou!");
+                buttons_enable(false);
+                if (button11.Text == "X")
+                {
+                    win = 1;
+                }
+                else
+                {
+                    win = 2;
+                }
+            }
+            else if ((button31.Text == button32.Text && button32.Text == button33.Text && button33.Text != "" ||                        // linha tres
+                    button13.Text == button23.Text && button23.Text == button33.Text) && button33.Text != "")    // coluna 3
+            {
+                MessageBox.Show(button33.Text + " Ganhou!");
+                buttons_enable(false);
+                if (button11.Text == "X")
+                {
+                    win = 1;
+                }
+                else
+                {
+                    win = 2;
+                }
+            }
+            return win;
         }
         private void buttons_enable(bool c)
         {
@@ -94,20 +181,18 @@ namespace projeto_1
 
         private void btn_Click(object sender, EventArgs e)
         {
-            if (x_turn)
+
+            if (this.info.dificuldade == 0) // FACIL
             {
-                ((Button)sender).ForeColor = Color.CornflowerBlue;
-                ((Button)sender).Text = "X";
+                Dificuldade_facil(sender);
             }
-            else
+            else                            // JxJ
             {
-                ((Button)sender).ForeColor = Color.Red;
-                ((Button)sender).Text = "O";
+                Dificuldade_JxJ(sender);
             }
 
-            ((Button)sender).Enabled = false;
-            x_turn = !(x_turn);
-            win_condition();
+
+            
         }
 
         private void rankingDosJogadoresToolStripMenuItem_Click(object sender, EventArgs e)
@@ -120,6 +205,7 @@ namespace projeto_1
         {
             Informações info = new Informações();
             info.ShowDialog();
+            greetings.Text = "Olá, " + info.nome_jogador;
         }
     }
 }

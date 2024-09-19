@@ -82,7 +82,7 @@
 
         #endregion
 
-        private ListView ranks;
+        public ListView ranks;
         private ColumnHeader Posicao;
         private ColumnHeader nome;
         private ColumnHeader Jogos;

@@ -15,7 +15,7 @@ namespace projeto_1
     public partial class Informações : Form
     {
         public string nome_jogador = string.Empty;
-        public bool dificuldade;
+        public int dificuldade;
 
 
         public Informações()
@@ -25,12 +25,23 @@ namespace projeto_1
 
         private void button1_Click(object sender, EventArgs e)
         {
-            if (NomeJogador.Text == string.Empty) {
+            if (NomeJogador.Text == string.Empty)
+            {
                 MessageBox.Show("nome não pode ser vazio");
             }
-            else {
-                dificuldade = difDificil.Checked; // verdadeiro se dificil selecionado
+            else
+            {
                 nome_jogador = NomeJogador.Text;
+
+
+                if (difFacil.Checked)
+                {
+                    dificuldade = 0;    // facil
+                }
+                else
+                {
+                    dificuldade = -1;   // JxJ
+                }
                 Close();
             }
         }

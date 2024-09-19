@@ -32,7 +32,7 @@
             NomeJogador = new TextBox();
             IniciarJogo = new Button();
             Dificuldades = new GroupBox();
-            difDificil = new RadioButton();
+            radioButton1 = new RadioButton();
             difFacil = new RadioButton();
             Dificuldades.SuspendLayout();
             SuspendLayout();
@@ -40,25 +40,27 @@
             // displayNome
             // 
             displayNome.AutoSize = true;
-            displayNome.Font = new Font("Segoe UI", 12F, FontStyle.Bold, GraphicsUnit.Point, 0);
-            displayNome.Location = new Point(44, 28);
+            displayNome.Font = new Font("Segoe UI", 16.2F, FontStyle.Bold, GraphicsUnit.Point, 0);
+            displayNome.Location = new Point(43, 9);
             displayNome.Name = "displayNome";
-            displayNome.Size = new Size(215, 28);
+            displayNome.Size = new Size(301, 38);
             displayNome.TabIndex = 0;
             displayNome.Text = "NOME DO JOGADOR:";
             // 
             // NomeJogador
             // 
-            NomeJogador.Location = new Point(20, 59);
+            NomeJogador.Font = new Font("Segoe UI", 16.2F, FontStyle.Regular, GraphicsUnit.Point, 0);
+            NomeJogador.Location = new Point(20, 50);
             NomeJogador.Name = "NomeJogador";
-            NomeJogador.Size = new Size(250, 27);
+            NomeJogador.Size = new Size(337, 43);
             NomeJogador.TabIndex = 1;
             // 
             // IniciarJogo
             // 
-            IniciarJogo.Location = new Point(20, 276);
+            IniciarJogo.Font = new Font("Segoe UI", 16.2F, FontStyle.Regular, GraphicsUnit.Point, 0);
+            IniciarJogo.Location = new Point(17, 288);
             IniciarJogo.Name = "IniciarJogo";
-            IniciarJogo.Size = new Size(250, 29);
+            IniciarJogo.Size = new Size(337, 63);
             IniciarJogo.TabIndex = 6;
             IniciarJogo.Text = "INICAR JOGO";
             IniciarJogo.UseVisualStyleBackColor = true;
@@ -66,34 +68,36 @@
             // 
             // Dificuldades
             // 
-            Dificuldades.Controls.Add(difDificil);
+            Dificuldades.Controls.Add(radioButton1);
             Dificuldades.Controls.Add(difFacil);
-            Dificuldades.Font = new Font("Segoe UI", 10.2F, FontStyle.Regular, GraphicsUnit.Point, 0);
+            Dificuldades.Font = new Font("Segoe UI", 16.2F, FontStyle.Regular, GraphicsUnit.Point, 0);
             Dificuldades.Location = new Point(20, 119);
             Dificuldades.Name = "Dificuldades";
-            Dificuldades.Size = new Size(250, 125);
+            Dificuldades.Size = new Size(334, 151);
             Dificuldades.TabIndex = 7;
             Dificuldades.TabStop = false;
             Dificuldades.Text = "DIFICULDADE";
             // 
-            // difDificil
+            // radioButton1
             // 
-            difDificil.AutoSize = true;
-            difDificil.Location = new Point(125, 51);
-            difDificil.Name = "difDificil";
-            difDificil.Size = new Size(85, 27);
-            difDificil.TabIndex = 1;
-            difDificil.TabStop = true;
-            difDificil.Text = "DIFÍCIL";
-            difDificil.UseVisualStyleBackColor = true;
+            radioButton1.AutoSize = true;
+            radioButton1.Font = new Font("Segoe UI", 16F);
+            radioButton1.Location = new Point(23, 93);
+            radioButton1.Name = "radioButton1";
+            radioButton1.Size = new Size(258, 41);
+            radioButton1.TabIndex = 2;
+            radioButton1.TabStop = true;
+            radioButton1.Text = "Jogador x Jogador";
+            radioButton1.UseVisualStyleBackColor = true;
             // 
             // difFacil
             // 
             difFacil.AutoSize = true;
             difFacil.Checked = true;
-            difFacil.Location = new Point(6, 51);
+            difFacil.Font = new Font("Segoe UI", 16F);
+            difFacil.Location = new Point(89, 46);
             difFacil.Name = "difFacil";
-            difFacil.Size = new Size(73, 27);
+            difFacil.Size = new Size(102, 41);
             difFacil.TabIndex = 0;
             difFacil.TabStop = true;
             difFacil.Text = "FÁCIL";
@@ -103,7 +107,7 @@
             // 
             AutoScaleDimensions = new SizeF(8F, 20F);
             AutoScaleMode = AutoScaleMode.Font;
-            ClientSize = new Size(296, 331);
+            ClientSize = new Size(369, 370);
             Controls.Add(Dificuldades);
             Controls.Add(IniciarJogo);
             Controls.Add(NomeJogador);
@@ -122,7 +126,7 @@
         private TextBox NomeJogador;
         private Button IniciarJogo;
         private GroupBox Dificuldades;
-        private RadioButton difDificil;
         private RadioButton difFacil;
+        private RadioButton radioButton1;
     }
 }
