@@ -15,7 +15,7 @@ namespace projeto_1
         public Ranking()
         {
             InitializeComponent();
-            
+            ReadCSVToListView("ranking.csv", ranks);
             
             /*
             ListViewItem item = new ListViewItem("0");
@@ -29,8 +29,9 @@ namespace projeto_1
             
              */
         }
-        public void SaveListViewToFile(ListView listView, string filePath)
-        {
+        private void SaveListViewToFile(ListView listView, string filePath)
+        { 
+
             using (StreamWriter writer = new StreamWriter(filePath))
             {
                 // Write headers
@@ -55,21 +56,57 @@ namespace projeto_1
                 }
             }
         }
-
-        // Usage example
-        private void btnSaveListView_Click(object sender, EventArgs e)
+        public void ReadCSVToListView(string filePath, ListView listView)
         {
-            SaveFileDialog saveFileDialog = new SaveFileDialog();
-            saveFileDialog.Filter = "CSV files (*.csv)|*.csv|All files (*.*)|*.*";
-            saveFileDialog.DefaultExt = "csv";
-            saveFileDialog.AddExtension = true;
+            // Clear existing items
+            listView.Items.Clear();
+            listView.Columns.Clear();
 
-            if (saveFileDialog.ShowDialog() == DialogResult.OK)
+            // cria arquivo caso nao exista
+            if (File.Exists(filePath))
             {
-                SaveListViewToFile(ranks, saveFileDialog.FileName);
-                MessageBox.Show("ListView saved successfully!", "Success", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                FileStream fs = File.Create(filePath);
+                using (StreamWriter writer = new StreamWriter(filePath))
+                {
+                    foreach (string collum in ranks.Columns)
+                    {
+                        writer.Write(collum + ",");ranks.Columns.
+                    }
+                }
+            }
+
+            try
+            {
+                using (StreamReader reader = new StreamReader(filePath))
+                {
+                    // Read headers
+                    string headerLine = reader.ReadLine();
+                    string[] headers = headerLine.Split(',');
+                    foreach (string header in headers)
+                    {
+                        listView.Columns.Add(header.Trim());
+                    }
+
+                    // Read data
+                    while (!reader.EndOfStream)
+                    {
+                        string dataLine = reader.ReadLine();
+                        string[] dataValues = dataLine.Split(',');
+                        ListViewItem item = new ListViewItem(dataValues[0].Trim());
+                        for (int i = 1; i < dataValues.Length; i++)
+                        {
+                            item.SubItems.Add(dataValues[i].Trim());
+                        }
+                        listView.Items.Add(item);
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Error reading the CSV file: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
+
             
         
     }
