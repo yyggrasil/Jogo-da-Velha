@@ -4,6 +4,7 @@ using System.ComponentModel;
 using System.Data;
 using System.Drawing;
 using System.Linq;
+using System.Security.Cryptography.X509Certificates;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
@@ -15,7 +16,11 @@ namespace projeto_1
         public Ranking()
         {
             InitializeComponent();
-            ReadCSVToListView("ranking.csv", ranks);
+            // Using a relative path
+            string NomeArquivo = "data.csv";
+            string DiretorioProjeto = Directory.GetCurrentDirectory();
+            string filePath = Path.Combine(DiretorioProjeto, NomeArquivo);
+            ReadCSVToListView(filePath, ranks);
             
             /*
             ListViewItem item = new ListViewItem("0");
@@ -56,58 +61,60 @@ namespace projeto_1
                 }
             }
         }
-        public void ReadCSVToListView(string filePath, ListView listView)
+        public void ReadCSVToListView(string filePath, ListView rank)
         {
-            // Clear existing items
-            listView.Items.Clear();
-            listView.Columns.Clear();
+            
 
-            // cria arquivo caso nao exista
+            // limpa a listview para inserir
+            rank.Items.Clear();
+            rank.Columns.Clear();
+
+            // cria arquivo caso nao exista e o header
             if (File.Exists(filePath))
             {
                 FileStream fs = File.Create(filePath);
                 using (StreamWriter writer = new StreamWriter(filePath))
                 {
+                    int i = 0;
                     foreach (string collum in ranks.Columns)
                     {
-                        writer.Write(collum + ",");ranks.Columns.
-                    }
-                }
-            }
-
-            try
-            {
-                using (StreamReader reader = new StreamReader(filePath))
-                {
-                    // Read headers
-                    string headerLine = reader.ReadLine();
-                    string[] headers = headerLine.Split(',');
-                    foreach (string header in headers)
-                    {
-                        listView.Columns.Add(header.Trim());
-                    }
-
-                    // Read data
-                    while (!reader.EndOfStream)
-                    {
-                        string dataLine = reader.ReadLine();
-                        string[] dataValues = dataLine.Split(',');
-                        ListViewItem item = new ListViewItem(dataValues[0].Trim());
-                        for (int i = 1; i < dataValues.Length; i++)
+                        if (i < 3)
                         {
-                            item.SubItems.Add(dataValues[i].Trim());
+                            writer.Write(collum + ",");
                         }
-                        listView.Items.Add(item);
+                        else
+                        {
+                            writer.Write(collum + "\n");
+                        }
+                        i++;
                     }
                 }
             }
-            catch (Exception ex)
+
+            using (StreamReader reader = new StreamReader(filePath))
             {
-                MessageBox.Show($"Error reading the CSV file: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+
+                // leia o nome das colunas
+                string headerLine = reader.ReadLine();
+                string[] headers = headerLine.Split(',');
+                foreach (string header in headers)
+                {
+                    rank.Columns.Add(header.Trim()); // retiras os espaços na direita e na esquerda
+                }
+
+                // ler o csv
+                while (!reader.EndOfStream)
+                {
+                    string jogador = reader.ReadLine();
+                    string[] dados = jogador.Split(',');
+                    ListViewItem item = new ListViewItem(dados[0].Trim());
+                    for (int i = 1; i < dados.Length; i++)
+                    {
+                        item.SubItems.Add(dados[i].Trim());
+                    }
+                    rank.Items.Add(item);
+                }
             }
         }
-
-            
-        
     }
 }
