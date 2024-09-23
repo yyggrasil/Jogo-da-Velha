@@ -74,6 +74,11 @@ namespace projeto_1
         {
             // limpa a listview para inserir
             this.ranks.Items.Clear();
+            if (!File.Exists(filePath))
+            {
+                File.Create(filePath).Close();
+            }
+
 
             using (StreamReader reader = new StreamReader(filePath))
             {
