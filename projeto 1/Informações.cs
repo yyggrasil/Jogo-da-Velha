@@ -16,14 +16,12 @@ namespace projeto_1
     {
         public string nome_jogador = string.Empty;
         public int dificuldade;
-
-
         public Informações()
         {
             InitializeComponent();
         }
-
-        private void button1_Click(object sender, EventArgs e)
+        // EVENTO DE QUANDO PRECIONA O BOTAO DE INCIAR PARTIDA, VERIFICANDO TEM INFORMOU O NOME
+        private void IniciarPartida(object sender, EventArgs e)
         {
             if (NomeJogador.Text == string.Empty)
             {

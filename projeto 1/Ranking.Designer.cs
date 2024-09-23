@@ -34,6 +34,7 @@
             Jogos = new ColumnHeader();
             Vitorias = new ColumnHeader();
             Pontuacao = new ColumnHeader();
+            resetRank = new Button();
             SuspendLayout();
             // 
             // ranks
@@ -69,11 +70,22 @@
             Pontuacao.Text = "Pontuação";
             Pontuacao.Width = 100;
             // 
+            // resetRank
+            // 
+            resetRank.Location = new Point(12, 452);
+            resetRank.Name = "resetRank";
+            resetRank.Size = new Size(384, 40);
+            resetRank.TabIndex = 1;
+            resetRank.Text = "Reset ranking";
+            resetRank.UseVisualStyleBackColor = true;
+            resetRank.Click += reset_ranking;
+            // 
             // Ranking
             // 
             AutoScaleDimensions = new SizeF(8F, 20F);
             AutoScaleMode = AutoScaleMode.Font;
-            ClientSize = new Size(405, 450);
+            ClientSize = new Size(405, 504);
+            Controls.Add(resetRank);
             Controls.Add(ranks);
             Name = "Ranking";
             Text = "Ranking de Jogadores";
@@ -88,5 +100,6 @@
         private ColumnHeader Jogos;
         private ColumnHeader Vitorias;
         private ColumnHeader Pontuacao;
+        private Button resetRank;
     }
 }

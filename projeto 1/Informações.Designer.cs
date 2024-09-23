@@ -64,7 +64,7 @@
             IniciarJogo.TabIndex = 6;
             IniciarJogo.Text = "INICAR JOGO";
             IniciarJogo.UseVisualStyleBackColor = true;
-            IniciarJogo.Click += button1_Click;
+            IniciarJogo.Click += IniciarPartida;
             // 
             // Dificuldades
             // 

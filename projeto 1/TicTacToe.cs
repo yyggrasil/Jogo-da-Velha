@@ -12,23 +12,26 @@ namespace projeto_1
             greetings.Text = "Olá, " + info.nome_jogador;
 
         }
+        // FAZ O CONTROLE DA DIFICULDADE FACIL
         private void Dificuldade_facil(object sender)
         {
             ((Button)sender).Text = "X";
             ((Button)sender).Enabled = false;
 
-
-            if (Game_Result() == 0) // nao acabou ainda
+            int result = Game_Result();
+            if (result == 0) // nao acabou ainda
             {
                 Random random = new Random();
                 int pos0 = random.Next(9);
                 Jogada_Bot(pos0);
+                result = Game_Result();
             }
-            if (Game_Result() == 1) // X ganhou
+            if (result != 0) // acabou a partida
             {
-
+                this.ranking.AddNewGame(result, info.nome_jogador);
             }
         }
+        // FAZ A JOGADA DO BOT NO MODO FACIL
         private void Jogada_Bot(int pos0)
         {
             int pos = 0;
@@ -46,6 +49,7 @@ namespace projeto_1
                         else
                         {
                             ((Button)c).Text = "O";
+                            ((Button)c).Enabled = false;
                         }
                         break;
                     }
@@ -68,6 +72,7 @@ namespace projeto_1
             x_turn = !(x_turn);
             Game_Result();
         }
+        // RETORNA UM INT DE ACORDO COM O RESULTADO DA PARTIDA (0 - andamento, -1 - empate, 1 - x ganhou, 2 - O ganhou)
         private int Game_Result()
         {
             bool draw = true;
@@ -114,7 +119,7 @@ namespace projeto_1
             {
                 MessageBox.Show(button22.Text + " Ganhou!");
                 buttons_enable(false);
-                if (button11.Text == "X")
+                if (button22.Text == "X")
                 {
                     win = 1;
                 }
@@ -128,7 +133,7 @@ namespace projeto_1
             {
                 MessageBox.Show(button33.Text + " Ganhou!");
                 buttons_enable(false);
-                if (button11.Text == "X")
+                if (button33.Text == "X")
                 {
                     win = 1;
                 }
@@ -139,6 +144,7 @@ namespace projeto_1
             }
             return win;
         }
+        // TRAVA OU LIBERA OS BOTÃOS
         private void buttons_enable(bool c)
         {
             button11.Enabled = c;
@@ -151,6 +157,7 @@ namespace projeto_1
             button32.Enabled = c;
             button33.Enabled = c;
         }
+        // LIMPA O TEXTO DOS BOTÃO
         private void buttons_clear()
         {
             button11.Text = "";
@@ -165,14 +172,12 @@ namespace projeto_1
             button32.Text = "";
             button33.Text = "";
         }
-
         private void Reset_Game(object sender, EventArgs e)
         {
             buttons_clear();
             buttons_enable(true);
             x_turn = true;
         }
-
         private void btn_Click(object sender, EventArgs e)
         {
 
@@ -188,18 +193,15 @@ namespace projeto_1
 
             
         }
-
         private void rankingDosJogadoresToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            Ranking rank = new Ranking();
-            rank.ShowDialog();
+            this.ranking.Show();
         }
 
         private void informarDadosDoJogadorToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            Informações info = new Informações();
-            info.ShowDialog();
-            greetings.Text = "Olá, " + info.nome_jogador;
+            this.info.ShowDialog();
+            greetings.Text = "Olá, " + this.info.nome_jogador;
         }
     }
 }

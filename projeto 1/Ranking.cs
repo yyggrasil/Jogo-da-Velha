@@ -8,48 +8,43 @@ using System.Security.Cryptography.X509Certificates;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using System.IO;
+using static System.Windows.Forms.VisualStyles.VisualStyleElement;
+using System.Collections;
 
 namespace projeto_1
 {
     public partial class Ranking : Form
     {
+        string filePath;
         public Ranking()
         {
             InitializeComponent();
-            // Using a relative path
-            string NomeArquivo = "data.csv";
+
+            // Caminho relativo do programa
+            string NomeArquivo = "ranking.csv";
             string DiretorioProjeto = Directory.GetCurrentDirectory();
-            string filePath = Path.Combine(DiretorioProjeto, NomeArquivo);
-            ReadCSVToListView(filePath, ranks);
-            
-            /*
-            ListViewItem item = new ListViewItem("0");
-
-            item.SubItems[0].Text = "0";
-            item.SubItems.Add("kaue");
-            item.SubItems.Add("12");
-            item.SubItems.Add("10");
-            item.SubItems.Add("100");
-            ranks.Items.Add(item);
-            
-             */
+            filePath = Path.Combine(DiretorioProjeto, NomeArquivo);
+            ReadCSVToListView(filePath);
         }
-        private void SaveListViewToFile(ListView listView, string filePath)
-        { 
-
+        class Comparador : IComparer
+        {
+            private int col;
+            public Comparador(int coluna)
+            {
+                col = coluna;
+            }
+            public int Compare(object x, object y)
+            {
+                return -1 * String.Compare(((ListViewItem)x).SubItems[col].Text, ((ListViewItem)y).SubItems[col].Text);
+            }
+        }
+        private void SaveListViewToFile(string filePath)
+        {
             using (StreamWriter writer = new StreamWriter(filePath))
             {
-                // Write headers
-                for (int i = 0; i < listView.Columns.Count; i++)
-                {
-                    writer.Write(listView.Columns[i].Text);
-                    if (i < listView.Columns.Count - 1)
-                        writer.Write(",");
-                }
-                writer.WriteLine();
-
-                // Write rows
-                foreach (ListViewItem item in listView.Items)
+                // escrita dos items
+                foreach (ListViewItem item in this.ranks.Items)
                 {
                     for (int i = 0; i < item.SubItems.Count; i++)
                     {
@@ -61,47 +56,27 @@ namespace projeto_1
                 }
             }
         }
-        public void ReadCSVToListView(string filePath, ListView rank)
+        private void sortList()
         {
-            
+            this.ranks.Sorting = SortOrder.Descending;
 
-            // limpa a listview para inserir
-            rank.Items.Clear();
-            rank.Columns.Clear();
+            // ordena pela coluna 4 (pontuação)
+            this.ranks.ListViewItemSorter = new Comparador(4);
 
-            // cria arquivo caso nao exista e o header
-            if (File.Exists(filePath))
+            int pos = 1;
+            foreach (ListViewItem item in this.ranks.Items)
             {
-                FileStream fs = File.Create(filePath);
-                using (StreamWriter writer = new StreamWriter(filePath))
-                {
-                    int i = 0;
-                    foreach (string collum in ranks.Columns)
-                    {
-                        if (i < 3)
-                        {
-                            writer.Write(collum + ",");
-                        }
-                        else
-                        {
-                            writer.Write(collum + "\n");
-                        }
-                        i++;
-                    }
-                }
+                item.SubItems[0].Text = pos.ToString();
+                pos++;
             }
+        }
+        public void ReadCSVToListView(string filePath)
+        {
+            // limpa a listview para inserir
+            this.ranks.Items.Clear();
 
             using (StreamReader reader = new StreamReader(filePath))
             {
-
-                // leia o nome das colunas
-                string headerLine = reader.ReadLine();
-                string[] headers = headerLine.Split(',');
-                foreach (string header in headers)
-                {
-                    rank.Columns.Add(header.Trim()); // retiras os espaços na direita e na esquerda
-                }
-
                 // ler o csv
                 while (!reader.EndOfStream)
                 {
@@ -112,9 +87,59 @@ namespace projeto_1
                     {
                         item.SubItems.Add(dados[i].Trim());
                     }
-                    rank.Items.Add(item);
+                    this.ranks.Items.Add(item);
                 }
             }
+        }
+        public void AddNewGame(int result, string nome)
+        {
+            bool achou = false;
+            foreach (ListViewItem jogador in this.ranks.Items)
+            {
+                if (jogador.SubItems[1].Text == nome)
+                {
+                    achou = true;
+
+                    // AUMENTAR O NUMERO DE PARTIDAS
+                    jogador.SubItems[2].Text = (int.Parse(jogador.SubItems[2].Text) + 1).ToString();
+
+                    if (result == 1) // jogador ganhou
+                    {
+                        // AUMENTAR O NUMERO DE VITORIAS
+                        jogador.SubItems[3].Text = (int.Parse(jogador.SubItems[3].Text) + 1).ToString();
+
+                        // pontuação aumenta em 10
+                        jogador.SubItems[4].Text = (int.Parse(jogador.SubItems[4].Text) + 10).ToString();
+                    }
+                }
+            }
+            if (!achou)
+            {
+                // criar novo item 
+                int pos = ranks.Items.Count;
+                ListViewItem jogador = new ListViewItem(pos.ToString());
+                jogador.SubItems.Add(nome);
+                jogador.SubItems.Add("1"); // partida
+                // vitorias e pontuação
+                if (result == 1)
+                {
+                    jogador.SubItems.Add("1");
+                    jogador.SubItems.Add("10");
+                }
+                else
+                {
+                    jogador.SubItems.Add("0");
+                    jogador.SubItems.Add("0");
+                }
+                ranks.Items.Add(jogador);
+            }
+            sortList();
+            SaveListViewToFile(this.filePath);
+        }
+
+        private void reset_ranking(object sender, EventArgs e)
+        {
+            this.ranks.Items.Clear();
         }
     }
 }
